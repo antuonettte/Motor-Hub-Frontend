@@ -1,0 +1,35 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-carnetwork-dev-05b99-authRole",
+      "UnauthRoleArn": "arn:aws:iam::553701962654:role/amplify-carnetwork-dev-05b99-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::553701962654:role/amplify-carnetwork-dev-05b99-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-carnetwork-dev-05b99-deployment",
+      "UnauthRoleName": "amplify-carnetwork-dev-05b99-unauthRole",
+      "StackName": "amplify-carnetwork-dev-05b99",
+      "StackId": "arn:aws:cloudformation:us-east-1:553701962654:stack/amplify-carnetwork-dev-05b99/ced526e0-2a84-11ef-8aba-1245133af189",
+      "AmplifyAppId": "d2f2onxefolbwc",
+      "AuthTriggerTemplateURL": "https://s3.amazonaws.com/amplify-carnetwork-dev-05b99-deployment/amplify-cfn-templates/auth/auth-trigger-cloudformation-template.json"
+    },
+    "categories": {
+      "auth": {
+        "carnetworkb188c171": {}
+      },
+      "function": {
+        "carnetworkb188c171CustomMessage": {
+          "REDIRECTURL": "http://localhost:/",
+          "EMAILSUBJECT": "Please Confirm your email",
+          "EMAILMESSAGE": "Please Confirm Email",
+          "deploymentBucketName": "amplify-carnetwork-dev-05b99-deployment",
+          "s3Key": "amplify-builds/carnetworkb188c171CustomMessage-714a47347636376b4d5a-build.zip"
+        },
+        "carnetworkb188c171PostConfirmation": {
+          "GROUP": "Users",
+          "deploymentBucketName": "amplify-carnetwork-dev-05b99-deployment",
+          "s3Key": "amplify-builds/carnetworkb188c171PostConfirmation-2b52584a2b4b69504c6d-build.zip"
+        }
+      }
+    }
+  }
+}
