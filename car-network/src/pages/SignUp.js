@@ -1,22 +1,20 @@
 // src/SignUp.js
 import React, { useState } from 'react';
-import { Auth } from 'aws-amplify';
+import { useAuth } from '../providers/AuthProvider';
 
 const SignUp = () => {
+  const { supabase } = useAuth();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
 
   const signUp = async () => {
     try {
-      const { user } = await Auth.signUp({
-        username,
-        password,
-        attributes: {
-          email,
-        }
-      });
-      console.log(user);
+      const { data, error } = await supabase.auth.signUp({
+        email: email,
+        password: password
+      })
+      console.log(data);
     } catch (error) {
       console.log('error signing up:', error);
     }

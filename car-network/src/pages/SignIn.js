@@ -1,17 +1,18 @@
-// src/SignIn.js
 import React, { useState } from 'react';
-import { signIn } from 'aws-amplify/auth';
-
-// let Auth = Amplify.Auth
+import { useAuth } from '../providers/AuthProvider';
 
 const SignIn = () => {
-  const [username, setUsername] = useState('');
+  const { supabase } = useAuth();
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   const login = async () => {
     try {
-      const user = await signIn(username, password);
-      console.log(user);
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: email,
+        password: password
+      })
+      console.log(data)
     } catch (error) {
       console.log('error signing in', error);
     }
@@ -20,9 +21,9 @@ const SignIn = () => {
   return (
     <div>
       <input
-        name="username"
-        onChange={(e) => setUsername(e.target.value)}
-        placeholder="Username"
+        name="email"
+        onChange={(e) => setEmail(e.target.value)}
+        placeholder="Email"
       />
       <input
         name="password"
