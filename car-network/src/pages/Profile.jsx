@@ -1,21 +1,24 @@
 import React, { useEffect, useState } from 'react'
-import { useAuth } from '../providers/AuthProvider'
-import useLocalStorage from '../hooks/UseLocalStorage.jsx'
 import { fetchUserById, fetchUsers } from '../api/api.js'
 import '../css/ProfilePage.css';
+
+import { Container, Avatar, Typography, Box, Grid, IconButton } from '@mui/material';
+import { Email, Phone } from '@mui/icons-material';
 
 
 const Profile = () => {
   const [profile, setProfile] = useState({
-    profilePicture: 'https://placehold.co/600x400',
-    name: '',
-    bio: '',
-    followersCount: 0,
-    followingCount: 0
+    profile_picture: 'https://placehold.co/600x600',
+    first_name: 'John',
+    last_name: 'Doe',
+    bio: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Pharetra vel turpis nunc eget lorem dolor sed. Nunc mattis enim ut tellus elementum sagittis vitae et.',
+    location: 'Atlanta',
+    follower_count: 0,
+    following_count: 0
   });
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
-  
+
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -33,27 +36,33 @@ const Profile = () => {
   }, []);
 
   return (
-    <div className="profile-page">
-      <div className="profile-header">
-        <img src={profile.profilePicture} alt="Profile" className="profile-picture" />
-        <h1 className="profile-name">{profile.first_name + " " + profile.last_name}</h1>
-      </div>
-      <div className="profile-bio">
-        <p>{profile.bio}</p>
-      </div>
-      <div className="profile-stats">
-        <div className="profile-followers">
-          <span className="count">{profile.follower_count}</span>
-          <span className="label">Followers</span>
-        </div>
-        <div className="profile-following">
-          <span className="count">{profile.following_count}</span>
-          <span className="label">Following</span>
-        </div>
-      </div>
-    </div>
+    <Container maxWidth="sm" style={{ marginTop: '50px' }}>
+      <Box display="flex" flexDirection="column" alignItems="center">
+        <Avatar
+          alt="Profile Picture"
+          src="https://via.placeholder.com/150"
+          style={{ width: '150px', height: '150px' }}
+        />
+        <Typography variant="h4" style={{ marginTop: '20px' }}>
+          John Doe
+        </Typography>
+        <Typography variant="body1" color="textSecondary" style={{ marginTop: '10px', textAlign: 'center' }}>
+          A passionate developer with experience in React and Material-UI. Love to create beautiful and functional
+          user interfaces.
+        </Typography>
+        <Box display="flex" flexDirection="row" style={{ marginTop: '20px' }}>
+          <IconButton aria-label="email">
+            <Email />
+          </IconButton>
+          <IconButton aria-label="phone">
+            <Phone />
+          </IconButton>
+        </Box>
+      </Box>
+    </Container>
   );
 };
+
 
 
 export default Profile

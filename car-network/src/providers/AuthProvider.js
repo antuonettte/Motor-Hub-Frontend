@@ -17,47 +17,47 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session)
+
+    })
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      console.log("Auth Change: ", _event)
+      if (_event == 'SIGNED_OUT') {
+        setSession(null)
+      } else if (session) {
         setSession(session)
-        
-      })
+      } else if (_event == 'TOKEN_REFRESHED') {
+        Cookies.set('access_token', session.access_token)
+        console.log("Token Refresh session", session)
 
-      const {
-        data: { subscription },
-      } = supabase.auth.onAuthStateChange((_event, session) => {
-        console.log("Auth Change: ", _event)
-        if (_event == 'SIGNED_OUT'){
-            setSession(null)
-        } else if (session){
-            setSession(session)
-        } else if (_event == 'TOKEN_REFRESHED'){
-          localStorage.setItem('access_token', session.access_token)
-          console.log("Token Refresh session", session)
+      } else if (_event == 'SIGNED_IN') {
+        console.log('Sign In Session', session)
+        setUser(session?.user || null)
+        Cookies.set('access_token', session.access_token)
+        console.log(session.access_token)
+      }
+    })
 
-        } else if (_event == 'SIGNED_IN'){
-          console.log('Sign In Session', session)
-          setUser(session?.user || null)
-          localStorage.setItem('access_token', session.access_token)
-          console.log(session.access_token)
-        }
-      })
-
-      return () => subscription.unsubscribe()
+    return () => subscription.unsubscribe()
   }, []);
 
-  const signIn = async ( email, password ) => {
+  const signIn = async (email, password) => {
     const { data, error } = await supabase.auth.signInWithPassword({
       email: email,
-      password: password 
+      password: password
     });
-    if (data.user){
+    if (data.user) {
       setUser(data.user)
-    }else{
+    } else {
       setUser(null)
     }
     if (error) throw error;
 
     const token = data.session.access_token
-    localStorage.setItem('access_token', token)
+    Cookies.set('access_token', token)
     return data;
   };
 
@@ -65,7 +65,9 @@ export const AuthProvider = ({ children }) => {
     const { data, error } = await supabase.auth.signUp({
       email: email,
       password: password
-      });
+    });
+
+    setUser(data.user)
 
     if (error) throw error;
     return data

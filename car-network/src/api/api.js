@@ -1,42 +1,32 @@
 import axios from 'axios';
-import React, { useState } from 'react'
-import useLocalStorage from '../hooks/UseLocalStorage.jsx'
 import Cookies from 'js-cookie';
 
 const API_BASE_URL = 'https://0o85tmys9f.execute-api.us-east-1.amazonaws.com/Main';
 
-let token
-
-
-
+// Create an axios instance
 const apiClient = axios.create({
   baseURL: API_BASE_URL,
   headers: {
     'Content-Type': 'application/json',
-    'Authorization': `Bearer ${token}`
   },
-
 });
 
-
-
-
-// Add a request interceptor
-apiClient.interceptors.request.use((config) => {
-  const token = localStorage.getItem('access_token');
+// Add a request interceptor to include the token from cookies
+apiClient.interceptors.request.use(config => {
+  const token = Cookies.get('access_token');
   console.log(token)
   if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
+    config.headers['Authorization'] = `Bearer ${token}`;
   }
   return config;
-}, (error) => {
+}, error => {
   return Promise.reject(error);
 });
 
 // Add a response interceptor
-apiClient.interceptors.response.use((response) => {
+apiClient.interceptors.response.use(response => {
   return response;
-}, (error) => {
+}, error => {
   // Handle token refresh logic, logging out, etc.
   return Promise.reject(error);
 });
@@ -46,3 +36,5 @@ export const fetchUserById = (id) => apiClient.get(`/user-management/user/?id=${
 export const createUser = (userData) => apiClient.post('/user-management/user', userData);
 export const generateFeed = (user_id) => apiClient.get(`/feed/?user_id=${user_id}`);
 // Add other API methods as needed
+
+export default apiClient;

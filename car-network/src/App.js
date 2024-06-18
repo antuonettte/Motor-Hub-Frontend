@@ -6,12 +6,26 @@ import SignIn from './pages/SignIn';
 import Home from './pages/Home'; // Your protected dashboard component
 import ProtectedRoute from './ProtectedRoute';
 import Profile from './pages/Profile';
+import Navbar from './components/Navbar';
+import { useAuth } from './providers/AuthProvider';
+
+
 
 const App = () => {
+  const [mode, setMode] = React.useState('light');
+  const toggleColorMode = () => {
+    setMode((prev) => (prev === 'dark' ? 'light' : 'dark'));
+  };
+
+  const { user } = useAuth()
+
+  console.log(user)
+  
   return (
     <BrowserRouter>
+    <Navbar mode={mode} toggleColorMode={toggleColorMode} />
       <Routes>
-        <Route path="/signup" element={<SignUp />} />
+        <Route path="/signup" element={ user ? <Home/> : <SignUp />  } />
         <Route path="/login" element={<SignIn />} />
         <Route path="/signin" element={<SignIn />} />
         <Route path="/home" element={
