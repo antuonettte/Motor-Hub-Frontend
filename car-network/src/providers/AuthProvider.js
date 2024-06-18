@@ -30,22 +30,14 @@ export const AuthProvider = ({ children }) => {
         } else if (session){
             setSession(session)
         } else if (_event == 'TOKEN_REFRESHED'){
-          Cookies.set('access_token',session.access_token, {
-            secure: true,
-            sameSite: 'Strict',
-            httpOnly: true
-          })
+          localStorage.setItem('access_token', session.access_token)
           console.log("Token Refresh session", session)
 
         } else if (_event == 'SIGNED_IN'){
           console.log('Sign In Session', session)
           setUser(session?.user || null)
-          Cookies.set('access_token',session.access_token, {
-            secure: true,
-            sameSite: 'Strict',
-            httpOnly: true
-          })
-          
+          localStorage.setItem('access_token', session.access_token)
+          console.log(session.access_token)
         }
       })
 
@@ -63,11 +55,9 @@ export const AuthProvider = ({ children }) => {
       setUser(null)
     }
     if (error) throw error;
-    Cookies.set('access_token',data.session.access_token, {
-      secure: true,
-      sameSite: 'Strict',
-      httpOnly: true
-    })
+
+    const token = data.session.access_token
+    localStorage.setItem('access_token', token)
     return data;
   };
 
@@ -78,8 +68,6 @@ export const AuthProvider = ({ children }) => {
       });
 
     if (error) throw error;
-    console.log(data)
-
     return data
   };
 

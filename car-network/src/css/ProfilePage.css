@@ -1,0 +1,58 @@
+.profile-page {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    text-align: center;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .profile-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .profile-picture {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #ddd;
+    margin-bottom: 10px;
+  }
+  
+  .profile-name {
+    font-size: 24px;
+    font-weight: bold;
+    margin: 0;
+  }
+  
+  .profile-bio {
+    font-size: 16px;
+    margin: 20px 0;
+  }
+  
+  .profile-stats {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+  }
+  
+  .profile-followers, .profile-following {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .count {
+    font-size: 20px;
+    font-weight: bold;
+  }
+  
+  .label {
+    font-size: 14px;
+    color: #777;
+  }
+  
