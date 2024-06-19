@@ -35,6 +35,7 @@ export const fetchUsers = () => apiClient.get('/user-management/users');
 export const fetchUserById = (id) => apiClient.get(`/user-management/user/?id=${id}`);
 export const createUser = (userData) => apiClient.post('/user-management/user', userData);
 export const generateFeed = (user_id) => apiClient.get(`/feed/?user_id=${user_id}`);
+export const fetchPostsByUser = (user_id) => apiClient.get(`/post-management/posts?user_id=${user_id}`);
 // Add other API methods as needed
 
 export default apiClient;

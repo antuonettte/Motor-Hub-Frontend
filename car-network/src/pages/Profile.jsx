@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import { fetchUserById, fetchUsers } from '../api/api.js'
+import { fetchPostsByUser, fetchUserById } from '../api/api.js'
 import '../css/ProfilePage.css';
 
-import { Container, Avatar, Typography, Box, Grid, IconButton } from '@mui/material';
+import { Container, Avatar, Typography, Box, Grid, IconButton, Card, CardContent, CardMedia } from '@mui/material';
 import { Email, Phone } from '@mui/icons-material';
-
 
 const Profile = () => {
   const [profile, setProfile] = useState({
@@ -17,6 +16,7 @@ const Profile = () => {
     following_count: 0
   });
   const [loading, setLoading] = useState(false)
+  const [posts, setPosts] = useState([])
   const [error, setError] = useState(null)
 
   useEffect(() => {
@@ -32,34 +32,83 @@ const Profile = () => {
       }
     };
 
+    const fetchPosts = async () => {
+      try {
+        const response = await fetchPostsByUser(2);
+        setPosts(response.data);
+        console.log(response.data)
+      } catch (err) {
+        setError(err);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchPosts();
     fetchUser();
   }, []);
 
   return (
-    <Container maxWidth="sm" style={{ marginTop: '50px' }}>
-      <Box display="flex" flexDirection="column" alignItems="center">
-        <Avatar
-          alt="Profile Picture"
-          src="https://via.placeholder.com/150"
-          style={{ width: '150px', height: '150px' }}
-        />
-        <Typography variant="h4" style={{ marginTop: '20px' }}>
-          John Doe
+    <Container maxWidth="sm" style={{ marginTop: '100px' }}>
+    <Box display="flex" flexDirection="column" alignItems="center">
+      <Avatar
+        alt="Profile Picture"
+        src={profile.profile_picture}
+        style={{ width: '150px', height: '150px' }}
+      />
+      <Typography variant="h4" style={{ marginTop: '20px' }}>
+        {profile.first_name + " " + profile.last_name}
+      </Typography>
+      <Box display="flex" flexDirection="row" style={{ marginTop: '10px' }}>
+        <Typography variant="body1" style={{ marginRight: '20px' }}>
+          <strong>{profile.follower_count}</strong> Followers
         </Typography>
-        <Typography variant="body1" color="textSecondary" style={{ marginTop: '10px', textAlign: 'center' }}>
-          A passionate developer with experience in React and Material-UI. Love to create beautiful and functional
-          user interfaces.
+        <Typography variant="body1">
+          <strong>{profile.following_count}</strong> Following
         </Typography>
-        <Box display="flex" flexDirection="row" style={{ marginTop: '20px' }}>
-          <IconButton aria-label="email">
-            <Email />
-          </IconButton>
-          <IconButton aria-label="phone">
-            <Phone />
-          </IconButton>
-        </Box>
       </Box>
-    </Container>
+      <Typography variant="body1" color="textSecondary" style={{ marginTop: '20px', textAlign: 'center' }}>
+        {profile.bio}
+      </Typography>
+      <Box display="flex" flexDirection="row" style={{ marginTop: '20px' }}>
+        
+      </Box>
+    </Box>
+
+    <Box display="flex" flexDirection="column" alignItems="center" style={{ marginTop: '30px', width: '100%' }}>
+        <Typography variant="h5">Posts</Typography>
+        <Grid container spacing={2} style={{ marginTop: '10px' }}>
+          <Grid item xs={12} md={6}>
+            <Card style={{ height: '300px', overflow: 'hidden' }}>
+              <CardMedia
+                component="img"
+                height="140"
+                image="https://via.placeholder.com/400x200"
+                alt="Post image"
+              />
+              <CardContent>
+                <Typography gutterBottom variant="h5" component="div">
+                  Post Title 1
+                </Typography>
+                <Typography variant="body2" color="textSecondary" style={{
+                  display: '-webkit-box',
+                  WebkitLineClamp: 3,
+                  WebkitBoxOrient: 'vertical',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis'
+                }}>
+                  This is a description of the first post.
+                </Typography>
+              </CardContent>
+            </Card>
+          </Grid>
+          <Grid item xs={12} md={6}>
+          
+          </Grid>
+          {/* Add more posts here */}
+        </Grid>
+      </Box>
+  </Container>
   );
 };
 
