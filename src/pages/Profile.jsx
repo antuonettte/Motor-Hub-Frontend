@@ -35,8 +35,8 @@ const Profile = () => {
     const fetchPosts = async () => {
       try {
         const response = await fetchPostsByUser(2);
-        setPosts(response.data);
-        console.log(response.data)
+        setPosts(response.data.posts);
+        console.log(response.data.posts)
       } catch (err) {
         setError(err);
       } finally {
@@ -78,6 +78,7 @@ const Profile = () => {
     <Box display="flex" flexDirection="column" alignItems="center" style={{ marginTop: '30px', width: '100%' }}>
         <Typography variant="h5">Posts</Typography>
         <Grid container spacing={2} style={{ marginTop: '10px' }}>
+
           {posts.map( (post) => {
             return <>
             <Grid item xs={12} md={6} key={post[0]}>
@@ -85,7 +86,7 @@ const Profile = () => {
               <CardMedia
                 component="img"
                 height="140"
-                image="https://via.placeholder.com/400x200"
+                image={profile.profile_picture ? profile.profile_picture : "https://via.placeholder.com/400x200"}
                 alt="Post image"
               />
               <CardContent>
@@ -104,6 +105,8 @@ const Profile = () => {
           </Grid>
             </>
           } )}
+
+
           <Grid item xs={12} md={6}>
           
           </Grid>
