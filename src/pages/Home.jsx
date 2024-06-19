@@ -3,7 +3,7 @@ import { useAuth } from '../providers/AuthProvider'
 import useLocalStorage from '../hooks/UseLocalStorage.jsx'
 import { AppBar, Avatar, Toolbar, Typography, Container, Box, Grid, Card, CardContent, CardMedia, IconButton, Button } from '@mui/material';
 import { ThumbUp, Comment } from '@mui/icons-material';
-import { generateFeed } from '../api/api.js';
+import { generateFeed, likePost } from '../api/api.js';
 import CarouselComponent from '../components/Carousel.jsx';
 
 
@@ -30,13 +30,26 @@ const Home = () => {
         fetchFeed()
     }, []);
 
+
+    const handleLike = async (post_id, index) => {
+        console.log(post_id, index)
+        try {
+            const response = await likePost(2, post_id);
+            console.log(response)
+        } catch (err) {
+            setError(err);
+            console.log(err)
+        } finally {
+            setLoading(false);
+        }
+    }
     console.log(posts)
     return (
         <div>
             <Container maxWidth="md" style={{ marginTop: '150px' }}>
                 <Grid container spacing={2}>
-                    {posts.map((post) => (
-                        <Grid item xs={12} key={post.id}>
+                    {posts.map((post, index) => (
+                        <Grid item xs={12} key={post.id}>{}
                             <Card>
                                 {
                                 post.media_metadata.length > 0 && 
@@ -55,7 +68,7 @@ const Home = () => {
                                     </Typography>
                                     <Box display="flex" alignItems="center" justifyContent="space-between" marginTop="10px">
                                         <Box display="flex" alignItems="center">
-                                            <IconButton>
+                                            <IconButton onClick={() => {handleLike(post.id, index)}}>
                                                 <ThumbUp />
                                             </IconButton>
                                             <Typography variant="body2">{post.likes} likes</Typography>

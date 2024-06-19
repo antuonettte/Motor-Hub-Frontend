@@ -14,7 +14,6 @@ const apiClient = axios.create({
 // Add a request interceptor to include the token from cookies
 apiClient.interceptors.request.use(config => {
   const token = Cookies.get('access_token');
-  console.log(token)
   if (token) {
     config.headers['Authorization'] = `Bearer ${token}`;
   }
@@ -28,6 +27,7 @@ apiClient.interceptors.response.use(response => {
   return response;
 }, error => {
   // Handle token refresh logic, logging out, etc.
+  console.log(error)
   return Promise.reject(error);
 });
 
@@ -36,6 +36,7 @@ export const fetchUserById = (id) => apiClient.get(`/user-management/user/?id=${
 export const createUser = (userData) => apiClient.post('/user-management/user', userData);
 export const generateFeed = (user_id) => apiClient.get(`/feed/?user_id=${user_id}`);
 export const fetchPostsByUser = (user_id) => apiClient.get(`/post-management/posts?user_id=${user_id}`);
+export const likePost = (user_id, post_id) => apiClient.post(`/post-management/like?user_id=${user_id}&post_id=${post_id}`)
 // Add other API methods as needed
 
 export default apiClient;
