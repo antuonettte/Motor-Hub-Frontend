@@ -12,6 +12,7 @@ import Drawer from '@mui/material/Drawer';
 import MenuIcon from '@mui/icons-material/Menu';
 import ToggleColorMode from './ToggleColorMode';
 import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from '../providers/AuthProvider';
 
 const logoStyle = {
     width: '140px',
@@ -22,6 +23,8 @@ const logoStyle = {
 const Navbar = ({mode, toggleColorMode}) => {
 
     const [open, setOpen] = React.useState(false);
+
+    const {signOut} = useAuth()
 
     const toggleDrawer = (newOpen) => () => {
         setOpen(newOpen);
@@ -94,6 +97,14 @@ const Navbar = ({mode, toggleColorMode}) => {
                   >
                     <Typography variant="body2" color="text.primary">
                       Home
+                    </Typography>
+                  </MenuItem>
+                  <MenuItem
+                    onClick={() => signOut()}
+                    sx={{ py: '6px', px: '12px' }}
+                  >
+                    <Typography variant="body2" color="text.primary">
+                      logout
                     </Typography>
                   </MenuItem>
                   {/* <MenuItem
