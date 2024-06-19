@@ -5,6 +5,8 @@ import '../css/ProfilePage.css';
 import { Container, Avatar, Typography, Box, Grid, IconButton, Card, CardContent, CardMedia } from '@mui/material';
 import { Email, Phone } from '@mui/icons-material';
 
+// TODO: Implement Clicking on post
+
 const Profile = () => {
   const [profile, setProfile] = useState({
     profile_picture: 'https://placehold.co/600x600',
