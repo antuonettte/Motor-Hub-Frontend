@@ -78,7 +78,9 @@ const Profile = () => {
     <Box display="flex" flexDirection="column" alignItems="center" style={{ marginTop: '30px', width: '100%' }}>
         <Typography variant="h5">Posts</Typography>
         <Grid container spacing={2} style={{ marginTop: '10px' }}>
-          <Grid item xs={12} md={6}>
+          {posts.map( (post) => {
+            return <>
+            <Grid item xs={12} md={6} key={post[0]}>
             <Card style={{ height: '300px', overflow: 'hidden' }}>
               <CardMedia
                 component="img"
@@ -87,9 +89,7 @@ const Profile = () => {
                 alt="Post image"
               />
               <CardContent>
-                <Typography gutterBottom variant="h5" component="div">
-                  Post Title 1
-                </Typography>
+                
                 <Typography variant="body2" color="textSecondary" style={{
                   display: '-webkit-box',
                   WebkitLineClamp: 3,
@@ -97,11 +97,13 @@ const Profile = () => {
                   overflow: 'hidden',
                   textOverflow: 'ellipsis'
                 }}>
-                  This is a description of the first post.
+                  {post[3]}
                 </Typography>
               </CardContent>
             </Card>
           </Grid>
+            </>
+          } )}
           <Grid item xs={12} md={6}>
           
           </Grid>
