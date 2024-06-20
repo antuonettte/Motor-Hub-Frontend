@@ -26,7 +26,6 @@ const Profile = () => {
       try {
         const response = await fetchUserById(2);
         setProfile(response.data.user);
-        console.log(response.data.user)
       } catch (err) {
         setError(err);
       } finally {
@@ -36,7 +35,7 @@ const Profile = () => {
 
     const fetchPosts = async () => {
       try {
-        const response = await fetchPostsByUser(2);
+        const response = await fetchPostsByUser(2, 2);
         setPosts(response.data.posts);
         console.log(response.data.posts)
       } catch (err) {
@@ -52,70 +51,65 @@ const Profile = () => {
 
   return (
     <Container maxWidth="sm" style={{ marginTop: '100px' }}>
-    <Box display="flex" flexDirection="column" alignItems="center">
-      <Avatar
-        alt="Profile Picture"
-        src={profile.profile_picture}
-        style={{ width: '150px', height: '150px' }}
-      />
-      <Typography variant="h4" style={{ marginTop: '20px' }}>
-        {profile.first_name + " " + profile.last_name}
-      </Typography>
-      <Box display="flex" flexDirection="row" style={{ marginTop: '10px' }}>
-        <Typography variant="body1" style={{ marginRight: '20px' }}>
-          <strong>{profile.follower_count}</strong> Followers
+      <Box display="flex" flexDirection="column" alignItems="center">
+        <Avatar
+          alt="Profile Picture"
+          src={profile.profile_picture}
+          style={{ width: '150px', height: '150px' }}
+        />
+        <Typography variant="h4" style={{ marginTop: '20px' }}>
+          {profile.first_name + " " + profile.last_name}
         </Typography>
-        <Typography variant="body1">
-          <strong>{profile.following_count}</strong> Following
+        <Box display="flex" flexDirection="row" style={{ marginTop: '10px' }}>
+          <Typography variant="body1" style={{ marginRight: '20px' }}>
+            <strong>{profile.follower_count}</strong> Followers
+          </Typography>
+          <Typography variant="body1">
+            <strong>{profile.following_count}</strong> Following
+          </Typography>
+        </Box>
+        <Typography variant="body1" color="textSecondary" style={{ marginTop: '20px', textAlign: 'center' }}>
+          {profile.bio}
         </Typography>
-      </Box>
-      <Typography variant="body1" color="textSecondary" style={{ marginTop: '20px', textAlign: 'center' }}>
-        {profile.bio}
-      </Typography>
-      <Box display="flex" flexDirection="row" style={{ marginTop: '20px' }}>
-        
-      </Box>
-    </Box>
+        <Box display="flex" flexDirection="row" style={{ marginTop: '20px' }}>
 
-    <Box display="flex" flexDirection="column" alignItems="center" style={{ marginTop: '30px', width: '100%' }}>
+        </Box>
+      </Box>
+
+      <Box display="flex" flexDirection="column" alignItems="center" style={{ marginTop: '30px', width: '100%' }}>
         <Typography variant="h5">Posts</Typography>
         <Grid container spacing={2} style={{ marginTop: '10px' }}>
 
-          {posts.map( (post) => {
-            return <>
-            <Grid item xs={12} md={6} key={post[0]}>
-            <Card style={{ height: '300px', overflow: 'hidden' }}>
-              <CardMedia
-                component="img"
-                height="140"
-                image={profile.profile_picture ? profile.profile_picture : "https://via.placeholder.com/400x200"}
-                alt="Post image"
-              />
-              <CardContent>
-                
-                <Typography variant="body2" color="textSecondary" style={{
-                  display: '-webkit-box',
-                  WebkitLineClamp: 3,
-                  WebkitBoxOrient: 'vertical',
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis'
-                }}>
-                  {post[3]}
-                </Typography>
-              </CardContent>
-            </Card>
-          </Grid>
-            </>
-          } )}
+          {posts.map((post, index) => {
+            console.log(post)
+            return (
+              <Grid item xs={12} md={6} key={post['id']}>
+                <Card style={{ height: '300px', overflow: 'hidden' }}>
+                  <CardMedia
+                    component="img"
+                    height="140"
+                    image={post.media_metadata.length > 0 ? post.media_metadata[0]['url'] : "https://via.placeholder.com/400x200"}
+                    alt="Post image"
+                  />
+                  <CardContent>
 
-
-          <Grid item xs={12} md={6}>
-          
-          </Grid>
-          {/* Add more posts here */}
+                    <Typography variant="body2" color="textSecondary" style={{
+                      display: '-webkit-box',
+                      WebkitLineClamp: 3,
+                      WebkitBoxOrient: 'vertical',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis'
+                    }}>
+                      {post[3]}
+                    </Typography>
+                  </CardContent>
+                </Card>
+              </Grid>
+            )
+          })}
         </Grid>
       </Box>
-  </Container>
+    </Container>
   );
 };
 

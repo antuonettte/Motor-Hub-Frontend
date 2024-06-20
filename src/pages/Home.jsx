@@ -35,6 +35,11 @@ const Home = () => {
         console.log(post_id, index)
         try {
             const response = await likePost(2, post_id);
+            setPosts((prePosts) => 
+                 prePosts.map((post) => 
+                    post.id === post_id ? {...post, likedByUser: !post.likedByUser, like_count: post.likedByUser ? post.like_count - 1 : post.like_count + 1} : post
+                )
+            )
             console.log(response)
         } catch (err) {
             setError(err);
@@ -69,9 +74,9 @@ const Home = () => {
                                     <Box display="flex" alignItems="center" justifyContent="space-between" marginTop="10px">
                                         <Box display="flex" alignItems="center">
                                             <IconButton onClick={() => {handleLike(post.id, index)}}>
-                                                <ThumbUp />
+                                                <ThumbUp color={post.likedByUser ? "primary" : ""}/>
                                             </IconButton>
-                                            <Typography variant="body2">{post.likes} likes</Typography>
+                                            <Typography variant="body2">{post.like_count} likes</Typography>
                                         </Box>
                                         <Box display="flex" alignItems="center">
                                             <IconButton>
