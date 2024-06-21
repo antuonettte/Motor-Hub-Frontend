@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { fetchPostsByUser, fetchUserById } from '../api/api.js'
 import '../css/ProfilePage.css';
+import PostsGrid from '../components/PostsGrid.jsx';
+import PostsFeed from '../components/PostsFeed.jsx';
 
-import { Container, Avatar, Typography, Box, Grid, IconButton, Card, CardContent, CardMedia } from '@mui/material';
-import { Email, Phone } from '@mui/icons-material';
+import { Container, Avatar, Typography, Box, Grid, IconButton, Card, CardContent, CardMedia, CardActions, Button } from '@mui/material';
+import { likePost } from '../api/api.js';
 
 // TODO: Implement Clicking on post
 
@@ -20,6 +22,7 @@ const Profile = () => {
   const [loading, setLoading] = useState(false)
   const [posts, setPosts] = useState([])
   const [error, setError] = useState(null)
+  const [view, setView] = useState('grid');
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -49,6 +52,24 @@ const Profile = () => {
     fetchUser();
   }, []);
 
+  const handleLike = async (post_id, index) => {
+    console.log(post_id, index)
+    try {
+        const response = await likePost(2, post_id);
+        setPosts((prePosts) => 
+             prePosts.map((post) => 
+                post.id === post_id ? {...post, likedByUser: !post.likedByUser, like_count: post.likedByUser ? post.like_count - 1 : post.like_count + 1} : post
+            )
+        )
+        console.log(response)
+    } catch (err) {
+        setError(err);
+        console.log(err)
+    } finally {
+        setLoading(false);
+    }
+}
+
   return (
     <Container maxWidth="sm" style={{ marginTop: '100px' }}>
       <Box display="flex" flexDirection="column" alignItems="center">
@@ -76,39 +97,28 @@ const Profile = () => {
         </Box>
       </Box>
 
-      <Box display="flex" flexDirection="column" alignItems="center" style={{ marginTop: '30px', width: '100%' }}>
-        <Typography variant="h5">Posts</Typography>
-        <Grid container spacing={2} style={{ marginTop: '10px' }}>
-
-          {posts.map((post, index) => {
-            console.log(post)
-            return (
-              <Grid item xs={12} md={6} key={post['id']}>
-                <Card style={{ height: '300px', overflow: 'hidden' }}>
-                  <CardMedia
-                    component="img"
-                    height="140"
-                    image={post.media_metadata.length > 0 ? post.media_metadata[0]['url'] : "https://via.placeholder.com/400x200"}
-                    alt="Post image"
-                  />
-                  <CardContent>
-
-                    <Typography variant="body2" color="textSecondary" style={{
-                      display: '-webkit-box',
-                      WebkitLineClamp: 3,
-                      WebkitBoxOrient: 'vertical',
-                      overflow: 'hidden',
-                      textOverflow: 'ellipsis'
-                    }}>
-                      {post[3]}
-                    </Typography>
-                  </CardContent>
-                </Card>
-              </Grid>
-            )
-          })}
-        </Grid>
+      <Box textAlign="center" mb={2}>
+        <Button variant={view === 'grid' ? 'contained' : 'outlined'} onClick={() => setView('grid')}>
+          Grid View
+        </Button>
+        <Button variant={view === 'feed' ? 'contained' : 'outlined'} onClick={() => setView('feed')}>
+          Feed View
+        </Button>
+        <Button variant={view === 'none' ? 'contained' : 'outlined'} onClick={() => setView('none')}>
+          Empty View
+        </Button>
       </Box>
+
+      {view === 'grid' && <PostsGrid posts={posts} handleLike={handleLike}/>}
+      {view === 'feed' && <PostsFeed posts={posts} />}
+      {view === 'none' && (
+        <Box textAlign="center">
+          <Typography variant="h6">Nothing to display</Typography>
+        </Box>
+      )}
+
+      
+
     </Container>
   );
 };
