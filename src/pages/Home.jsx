@@ -5,20 +5,21 @@ import { AppBar, Avatar, Toolbar, Typography, Container, Box, Grid, Card, CardCo
 import { ThumbUp, Comment } from '@mui/icons-material';
 import { generateFeed, likePost } from '../api/api.js';
 import CarouselComponent from '../components/Carousel.jsx';
-
+import useStore from '../store.js'
 
 const Home = () => {
     const { signOut } = useAuth();
-    const [user, setUser] = useLocalStorage("user", null);
-    const [posts, setPosts] = useState([])
+    const { currentUser, feedResults, setFeedResults, updateLike } = useStore()
+    // const [posts, setPosts] = useState([])
     const [error, setError] = useState(null)
     const [loading, setLoading] = useState(true)
+    console.log(currentUser)
 
     useEffect(() => {
         const fetchFeed = async () => {
             try {
-                const response = await generateFeed(2);
-                setPosts(response.data.message['posts']);
+                const response = await generateFeed(currentUser.id);
+                setFeedResults(response.data.message['posts']);
             } catch (err) {
                 setError(err);
                 console.log(err)
@@ -30,35 +31,20 @@ const Home = () => {
         fetchFeed()
     }, []);
 
+    
 
-    const handleLike = async (post_id, index) => {
-        console.log(post_id, index)
-        try {
-            const response = await likePost(2, post_id);
-            setPosts((prePosts) => 
-                 prePosts.map((post) => 
-                    post.id === post_id ? {...post, likedByUser: !post.likedByUser, like_count: post.likedByUser ? post.like_count - 1 : post.like_count + 1} : post
-                )
-            )
-            console.log(response)
-        } catch (err) {
-            setError(err);
-            console.log(err)
-        } finally {
-            setLoading(false);
-        }
-    }
-    console.log(posts)
+
+    console.log(feedResults)
     return (
         <div>
             <Container maxWidth="md" style={{ marginTop: '150px' }}>
                 <Grid container spacing={2}>
-                    {posts.map((post, index) => (
-                        <Grid item xs={12} key={post.id}>{}
+                    {feedResults.map((post, index) => (
+                        <Grid item xs={12} key={post.id}>{ }
                             <Card>
                                 {
-                                post.media_metadata.length > 0 && 
-                                <CarouselComponent media={post.media_metadata} />
+                                    post.media_metadata.length > 0 &&
+                                    <CarouselComponent postID={post.id} postIndex={index} media={post.media_metadata} />
                                 }
                                 <CardContent>
                                     <Box display="flex" alignItems="center" marginBottom="10px">
@@ -73,8 +59,8 @@ const Home = () => {
                                     </Typography>
                                     <Box display="flex" alignItems="center" justifyContent="space-between" marginTop="10px">
                                         <Box display="flex" alignItems="center">
-                                            <IconButton onClick={() => {handleLike(post.id, index)}}>
-                                                <ThumbUp color={post.likedByUser ? "primary" : ""}/>
+                                            <IconButton onClick={() => { updateLike(post.id, index) }}>
+                                                <ThumbUp color={post.likedByUser ? "primary" : ""} />
                                             </IconButton>
                                             <Typography variant="body2">{post.like_count} likes</Typography>
                                         </Box>

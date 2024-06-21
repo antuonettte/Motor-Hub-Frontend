@@ -6,6 +6,7 @@ import App from './App';
 import { AuthProvider } from './providers/AuthProvider';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
+import { BrowserRouter,  } from 'react-router-dom';
 
 
 

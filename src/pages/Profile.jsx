@@ -6,23 +6,17 @@ import PostsFeed from '../components/PostsFeed.jsx';
 
 import { Container, Avatar, Typography, Box, Grid, IconButton, Card, CardContent, CardMedia, CardActions, Button } from '@mui/material';
 import { likePost } from '../api/api.js';
+import { useStore } from 'zustand';
 
 // TODO: Implement Clicking on post
 
 const Profile = () => {
-  const [profile, setProfile] = useState({
-    profile_picture: 'https://placehold.co/600x600',
-    first_name: 'John',
-    last_name: 'Doe',
-    bio: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Pharetra vel turpis nunc eget lorem dolor sed. Nunc mattis enim ut tellus elementum sagittis vitae et.',
-    location: 'Atlanta',
-    follower_count: 0,
-    following_count: 0
-  });
+
   const [loading, setLoading] = useState(false)
   const [posts, setPosts] = useState([])
   const [error, setError] = useState(null)
   const [view, setView] = useState('grid');
+  const { currentUser, profile, setProfile } = useStore()
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -38,7 +32,7 @@ const Profile = () => {
 
     const fetchPosts = async () => {
       try {
-        const response = await fetchPostsByUser(2, 2);
+        const response = await fetchPostsByUser(currentUser.id, currentUser.id);
         setPosts(response.data.posts);
         console.log(response.data.posts)
       } catch (err) {

@@ -38,5 +38,6 @@ export const generateFeed = (user_id) => apiClient.get(`/feed/?user_id=${user_id
 export const fetchPostsByUser = (user_id, current_user_id) => apiClient.get(`/post-management/posts?user_id=${user_id}&current_user_id=${current_user_id}`);
 export const likePost = (user_id, post_id) => apiClient.post(`/post-management/like?user_id=${user_id}&post_id=${post_id}`)
 export const search = (query) => apiClient.get(`/search?query=${query}`)
+export const updateUrl = (media_key, post_id) => apiClient.patch(`/media/update-url`, {"media_key": media_key, "post_id": post_id})
 
 export default apiClient;

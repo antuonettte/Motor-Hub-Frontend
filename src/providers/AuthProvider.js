@@ -4,6 +4,9 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import { createClient } from '@supabase/supabase-js';
 import Cookies from 'js-cookie'
 import useLocalStorage from '../hooks/UseLocalStorage.jsx'
+import { createUser, fetchUserById } from '../api/api.js';
+import useStore from '../store.js'
+import { useNavigate } from "react-router-dom";
 
 const supabaseUrl = 'https://uowsptyxrtvwphotngro.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVvd3NwdHl4cnR2d3Bob3RuZ3JvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTg0ODg2MjUsImV4cCI6MjAzNDA2NDYyNX0.EShLjUxjMC2e3xbQXHZ3puMrnCVmFXT_xyemGEtD0E8';
@@ -13,7 +16,8 @@ const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [session, setSession] = useState(null);
-  const [user, setUser] = useLocalStorage("user", null);
+  const { currentUser, setCurrentUser } = useStore()
+  // const navigate = useNavigate()
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -35,7 +39,8 @@ export const AuthProvider = ({ children }) => {
 
       } else if (_event == 'SIGNED_IN') {
         console.log('Sign In Session', session)
-        setUser(session?.user || null)
+
+        // setCurrentUser(session?.user || null)
         Cookies.set('access_token', session.access_token)
         console.log(session.access_token)
       }
@@ -49,10 +54,20 @@ export const AuthProvider = ({ children }) => {
       email: email,
       password: password
     });
+
+    console.log("Email: ", email, 'Password: ', password)
+
     if (data.user) {
-      setUser(data.user)
+      Cookies.set('access_token', data.session.access_token)
+      const response = await fetchUserById(data.user.id)
+      console.log("user data: ", response.data.user)
+      if (!response.data.user){
+        console.log("get user data issue")
+      }
+      setCurrentUser(response.data.user)
+
     } else {
-      setUser(null)
+      setCurrentUser(null)
     }
     if (error) throw error;
 
@@ -61,13 +76,21 @@ export const AuthProvider = ({ children }) => {
     return data;
   };
 
-  const signUp = async ({ email, password }) => {
+  const signUp = async ({ userData }) => {
     const { data, error } = await supabase.auth.signUp({
-      email: email,
-      password: password
+      email: userData.email,
+      password: userData.password
     });
 
-    setUser(data.user)
+    if (data.user) {
+      userData['id'] = data.user.id
+      console.log("userData: ", userData)
+
+      const response = await createUser(userData)
+      console.log(response)
+
+      setCurrentUser(userData)
+    }
 
     if (error) throw error;
     return data
@@ -76,7 +99,7 @@ export const AuthProvider = ({ children }) => {
   const signOut = async () => {
     const { error } = await supabase.auth.signOut();
     if (error) throw error;
-    setUser(null)
+    setCurrentUser(null)
   };
 
   const value = {
@@ -85,7 +108,6 @@ export const AuthProvider = ({ children }) => {
     signIn,
     signOut,
     signUp,
-    user
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
