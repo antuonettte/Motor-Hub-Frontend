@@ -8,6 +8,7 @@ import ProtectedRoute from './ProtectedRoute';
 import Profile from './pages/Profile';
 import Navbar from './components/Navbar';
 import { useAuth } from './providers/AuthProvider';
+import SearchPage from './pages/Search';
 
 
 
@@ -29,6 +30,11 @@ const App = () => {
         <Route path="/home" element={
           <ProtectedRoute>
             <Home />
+          </ProtectedRoute>
+        } />
+        <Route path="/search" element={
+          <ProtectedRoute>
+            <SearchPage />
           </ProtectedRoute>
         } />
         <Route path="/" element={

@@ -109,8 +109,8 @@ const Profile = () => {
         </Button>
       </Box>
 
-      {view === 'grid' && <PostsGrid posts={posts} handleLike={handleLike}/>}
-      {view === 'feed' && <PostsFeed posts={posts} />}
+      {view === 'grid' && <PostsGrid posts={posts} />}
+      {view === 'feed' && <PostsFeed posts={posts} handleLike={handleLike}/>}
       {view === 'none' && (
         <Box textAlign="center">
           <Typography variant="h6">Nothing to display</Typography>

@@ -104,7 +104,24 @@ const Navbar = ({mode, toggleColorMode}) => {
                     sx={{ py: '6px', px: '12px' }}
                   >
                     <Typography variant="body2" color="text.primary">
-                      logout
+                      Logout
+                    </Typography>
+                  </MenuItem>
+                  <MenuItem
+                    onClick={() => navigate('/profile')}
+                    sx={{ py: '6px', px: '12px' }}
+                  >
+                    <Typography variant="body2" color="text.primary">
+                      Profile
+                    </Typography>
+                  </MenuItem>
+
+                  <MenuItem
+                    onClick={() => navigate('/search')}
+                    sx={{ py: '6px', px: '12px' }}
+                  >
+                    <Typography variant="body2" color="text.primary">
+                      Search
                     </Typography>
                   </MenuItem>
                   {/* <MenuItem
@@ -149,25 +166,25 @@ const Navbar = ({mode, toggleColorMode}) => {
                 }}
               >
                 <ToggleColorMode mode={mode} toggleColorMode={toggleColorMode} />
-                <Link
+                <Button
                   color="primary"
                   variant="text"
                   size="small"
                   component="a"
-                  to="/login"
+                  onClick={() => navigate('/login')}
                 >
                   Sign in
-                </Link>
-                <Link
+                </Button>
+                <Button
                   color="primary"
                   variant="contained"
                   size="small"
                   component="a"
-                  to="/signup"
+                  onClick={() => navigate('/signup')}
                   
                 >
                   Sign up
-                </Link>
+                </Button>
               </Box>
               <Box sx={{ display: { sm: '', md: 'none' } }}>
                 <Button
@@ -213,26 +230,26 @@ const Navbar = ({mode, toggleColorMode}) => {
                     <MenuItem onClick={() => scrollToSection('faq')}>FAQ</MenuItem>
                     <Divider />
                     <MenuItem>
-                      <Link
+                      <Button
                         color="primary"
                         variant="contained"
                         component="a"
-                        to="/signup"
+                        onClick={() => navigate('/signup')}
                         sx={{ width: '100%' }}
                       >
                         Sign up
-                      </Link>
+                      </Button>
                     </MenuItem>
                     <MenuItem>
-                      <Link
+                      <Button
                         color="primary"
                         variant="outlined"
                         component="a"
-                        to={'/login'}
+                        onClick={() => {navigate('/login')}}
                         sx={{ width: '100%' }}
                       >
                         Sign in
-                      </Link>
+                      </Button>
                     </MenuItem>
                   </Box>
                 </Drawer>
