@@ -14,13 +14,10 @@ const CarouselComponent = ({ media, postIndex, postId }) => {
         // Check if the URL has expired
         if (currentTimestamp >= expiresAt) {
             // URL has expired, call function to update the URL
-            const response = await updateUrl(s3_key, post_id); // Replace with your function to update the URL
-            console.log(response)
+            const response = await updateUrl(s3_key, post_id); 
             updateMediaUrl(postIndex, mediaIndex, response.data.url, response.data.expiresAt)
             return response.data.url
         } else {
-            console.log("S3 URL is still valid");
-            console.log(url)
             return url
         }
     }

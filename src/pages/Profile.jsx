@@ -6,22 +6,22 @@ import PostsFeed from '../components/PostsFeed.jsx';
 
 import { Container, Avatar, Typography, Box, Grid, IconButton, Card, CardContent, CardMedia, CardActions, Button } from '@mui/material';
 import { likePost } from '../api/api.js';
-import { useStore } from 'zustand';
+import useStore from '../store.js';
 
 // TODO: Implement Clicking on post
 
 const Profile = () => {
-
+  // const [profile, setProfile] = useState({})
   const [loading, setLoading] = useState(false)
   const [posts, setPosts] = useState([])
   const [error, setError] = useState(null)
   const [view, setView] = useState('grid');
-  const { currentUser, profile, setProfile } = useStore()
+  const { currentUser, profile, setProfile, setCurrentUserPosts, currentUserPosts, updateCurrentUserLike } = useStore()
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const response = await fetchUserById(2);
+        const response = await fetchUserById(currentUser.id);
         setProfile(response.data.user);
       } catch (err) {
         setError(err);
@@ -33,8 +33,7 @@ const Profile = () => {
     const fetchPosts = async () => {
       try {
         const response = await fetchPostsByUser(currentUser.id, currentUser.id);
-        setPosts(response.data.posts);
-        console.log(response.data.posts)
+        setCurrentUserPosts(response.data.posts);
       } catch (err) {
         setError(err);
       } finally {
@@ -42,20 +41,16 @@ const Profile = () => {
       }
     }
 
-    fetchPosts();
     fetchUser();
+    fetchPosts();
   }, []);
 
-  const handleLike = async (post_id, index) => {
-    console.log(post_id, index)
+  const handleLike = async (post_id, likedByUser) => {
+    console.log(post_id, likedByUser)
     try {
-        const response = await likePost(2, post_id);
-        setPosts((prePosts) => 
-             prePosts.map((post) => 
-                post.id === post_id ? {...post, likedByUser: !post.likedByUser, like_count: post.likedByUser ? post.like_count - 1 : post.like_count + 1} : post
-            )
-        )
-        console.log(response)
+        const response = await likePost(currentUser.id, post_id);
+        updateCurrentUserLike(post_id)
+        console.log(currentUserPosts)
     } catch (err) {
         setError(err);
         console.log(err)
@@ -63,6 +58,7 @@ const Profile = () => {
         setLoading(false);
     }
 }
+
 
   return (
     <Container maxWidth="sm" style={{ marginTop: '100px' }}>
@@ -103,8 +99,8 @@ const Profile = () => {
         </Button>
       </Box>
 
-      {view === 'grid' && <PostsGrid posts={posts} />}
-      {view === 'feed' && <PostsFeed posts={posts} handleLike={handleLike}/>}
+      {view === 'grid' && <PostsGrid posts={currentUserPosts} />}
+      {view === 'feed' && <PostsFeed posts={currentUserPosts} handleLike={handleLike}/>}
       {view === 'none' && (
         <Box textAlign="center">
           <Typography variant="h6">Nothing to display</Typography>

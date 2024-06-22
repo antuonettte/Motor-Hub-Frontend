@@ -6,7 +6,6 @@ import useStore from './store.js'
 
 const ProtectedRoute = ({ children }) => {
     const {currentUser} = useStore()
-    console.log(currentUser)
     if (!currentUser) {
         return <Navigate to="/login"/>
     }

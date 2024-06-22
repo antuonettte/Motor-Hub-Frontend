@@ -13,6 +13,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import ToggleColorMode from './ToggleColorMode';
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from '../providers/AuthProvider';
+import SettingsIcon from '@mui/icons-material/Settings';
 
 const logoStyle = {
     width: '140px',
@@ -166,6 +167,15 @@ const Navbar = ({mode, toggleColorMode}) => {
                 }}
               >
                 <ToggleColorMode mode={mode} toggleColorMode={toggleColorMode} />
+                <Button
+                  color="primary"
+                  variant="text"
+                  size="small"
+                  component="a"
+                  onClick={() => navigate('/settings')}
+                >
+                  <SettingsIcon/>
+                </Button>
                 <Button
                   color="primary"
                   variant="text"

@@ -28,7 +28,7 @@ const PostsFeed = ({ posts, handleLike }) => {
                                     </Typography>
                                     <Box display="flex" alignItems="center" justifyContent="space-between" marginTop="10px">
                                         <Box display="flex" alignItems="center">
-                                            <IconButton onClick={() => {console.log("Like simulated")}}>
+                                            <IconButton onClick={() => {handleLike(post.id, post.likedByUser)}}>
                                                 <ThumbUp color={post.likedByUser ? "primary" : ""}/>
                                             </IconButton>
                                             <Typography variant="body2">{post.like_count} likes</Typography>

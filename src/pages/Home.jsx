@@ -9,11 +9,9 @@ import useStore from '../store.js'
 
 const Home = () => {
     const { signOut } = useAuth();
-    const { currentUser, feedResults, setFeedResults, updateLike } = useStore()
-    // const [posts, setPosts] = useState([])
+    const { currentUser, feedResults, setFeedResults, updateFeedLike, users } = useStore()
     const [error, setError] = useState(null)
     const [loading, setLoading] = useState(true)
-    console.log(currentUser)
 
     useEffect(() => {
         const fetchFeed = async () => {
@@ -59,7 +57,7 @@ const Home = () => {
                                     </Typography>
                                     <Box display="flex" alignItems="center" justifyContent="space-between" marginTop="10px">
                                         <Box display="flex" alignItems="center">
-                                            <IconButton onClick={() => { updateLike(post.id, index) }}>
+                                            <IconButton onClick={() => { updateFeedLike(post.id, post.user_id) }}>
                                                 <ThumbUp color={post.likedByUser ? "primary" : ""} />
                                             </IconButton>
                                             <Typography variant="body2">{post.like_count} likes</Typography>

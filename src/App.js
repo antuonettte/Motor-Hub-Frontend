@@ -9,6 +9,7 @@ import Profile from './pages/Profile';
 import Navbar from './components/Navbar';
 import { useAuth } from './providers/AuthProvider';
 import SearchPage from './pages/Search';
+import UserSettings from './pages/UserSettings';
 
 
 
@@ -30,6 +31,11 @@ const App = () => {
         <Route path="/home" element={
           <ProtectedRoute>
             <Home />
+          </ProtectedRoute>
+        } />
+        <Route path="/settings" element={
+          <ProtectedRoute>
+            <UserSettings />
           </ProtectedRoute>
         } />
         <Route path="/search" element={

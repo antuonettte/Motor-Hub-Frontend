@@ -13,7 +13,6 @@ const PostsGrid = ({ posts }) => {
         <Grid container spacing={2} style={{ marginTop: '10px' }}>
 
           {posts.map((post, index) => {
-            console.log(post)
             return (
               <Grid item xs={12} md={6} key={post['id']}>
                 <Card style={{ height: '200px', overflow: 'hidden' }} onClick={() => openPost(post['id'])}>
@@ -23,18 +22,6 @@ const PostsGrid = ({ posts }) => {
                     image={post.media_metadata.length > 0 ? post.media_metadata[0]['url'] : "https://via.placeholder.com/400x200"}
                     alt="Post image"
                   />
-                  {/* <CardContent>
-
-                    <Typography variant="body2" color="textSecondary" style={{
-                      display: '-webkit-box',
-                      WebkitLineClamp: 3,
-                      WebkitBoxOrient: 'vertical',
-                      overflow: 'hidden',
-                      textOverflow: 'ellipsis'
-                    }}>
-                      {post.content}
-                    </Typography>
-                  </CardContent> */}
                 </Card>
               </Grid>
             )
