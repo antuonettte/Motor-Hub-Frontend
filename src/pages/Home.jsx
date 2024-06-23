@@ -60,6 +60,7 @@ const Home = () => {
                                             <IconButton onClick={() => { updateFeedLike(post.id, post.user_id) }}>
                                                 <ThumbUp color={post.likedByUser ? "primary" : ""} />
                                             </IconButton>
+                                            {/* Figure this shit out */}
                                             <Typography variant="body2">{post.like_count} likes</Typography>
                                         </Box>
                                         <Box display="flex" alignItems="center">
