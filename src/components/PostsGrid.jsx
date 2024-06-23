@@ -9,7 +9,7 @@ const PostsGrid = ({ posts }) => {
   }
 
   return (
-    <Box display="flex" flexDirection="column" alignItems="center" style={{ marginTop: '30px', width: '100%' }}>
+    <Box display="flex" flexDirection="column" alignItems="center" style={{ marginTop: '30px', width: '100%', marginBottom: '50px' }}>
         <Grid container spacing={2} style={{ marginTop: '10px' }}>
 
           {posts.map((post, index) => {

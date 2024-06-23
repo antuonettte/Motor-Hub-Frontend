@@ -4,6 +4,8 @@ import '../css/ProfilePage.css';
 import PostsGrid from '../components/PostsGrid.jsx';
 import PostsFeed from '../components/PostsFeed.jsx';
 
+import { GridOn, TableRowsRounded, Garage } from '@mui/icons-material';
+
 import { Container, Avatar, Typography, Box, Grid, IconButton, Card, CardContent, CardMedia, CardActions, Button } from '@mui/material';
 import { likePost } from '../api/api.js';
 import useStore from '../store.js';
@@ -34,6 +36,7 @@ const Profile = () => {
       try {
         const response = await fetchPostsByUser(currentUser.id, currentUser.id);
         setCurrentUserPosts(response.data.posts);
+        console.log(response.data.posts)
       } catch (err) {
         setError(err);
       } finally {
@@ -41,7 +44,9 @@ const Profile = () => {
       }
     }
 
-    fetchUser();
+    if (!currentUser){
+      fetchUser();
+    }
     fetchPosts();
   }, []);
 
@@ -89,13 +94,13 @@ const Profile = () => {
 
       <Box textAlign="center" mb={2}>
         <Button variant={view === 'grid' ? 'contained' : 'outlined'} onClick={() => setView('grid')}>
-          Grid View
+          <GridOn/>
         </Button>
         <Button variant={view === 'feed' ? 'contained' : 'outlined'} onClick={() => setView('feed')}>
-          Feed View
+          <TableRowsRounded/>
         </Button>
         <Button variant={view === 'none' ? 'contained' : 'outlined'} onClick={() => setView('none')}>
-          Empty View
+          <Garage/>
         </Button>
       </Box>
 

@@ -1,5 +1,5 @@
 // src/App.js
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import SignUp from './pages/SignUp';
 import SignIn from './pages/SignIn';
@@ -10,6 +10,7 @@ import Navbar from './components/Navbar';
 import { useAuth } from './providers/AuthProvider';
 import SearchPage from './pages/Search';
 import UserSettings from './pages/UserSettings';
+import useStore from './store';
 
 
 
@@ -18,6 +19,12 @@ const App = () => {
   const toggleColorMode = () => {
     setMode((prev) => (prev === 'dark' ? 'light' : 'dark'));
   };
+  const { checkExpiration } = useStore();
+
+  useEffect(() => {
+    checkExpiration();
+  }, [checkExpiration]);
+
 
   const { user } = useAuth()
   
