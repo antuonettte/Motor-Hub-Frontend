@@ -225,19 +225,39 @@ const Navbar = ({mode, toggleColorMode}) => {
                     >
                       <ToggleColorMode mode={mode} toggleColorMode={toggleColorMode} />
                     </Box>
-                    <MenuItem onClick={() => scrollToSection('features')}>
-                      Features
-                    </MenuItem>
-                    <MenuItem onClick={() => scrollToSection('testimonials')}>
-                      Testimonials
-                    </MenuItem>
-                    <MenuItem onClick={() => scrollToSection('highlights')}>
-                      Highlights
-                    </MenuItem>
-                    <MenuItem onClick={() => scrollToSection('pricing')}>
-                      Pricing
-                    </MenuItem>
-                    <MenuItem onClick={() => scrollToSection('faq')}>FAQ</MenuItem>
+                    <MenuItem
+                    onClick={() => navigate('/home')}
+                    sx={{ py: '6px', px: '12px' }}
+                  >
+                    <Typography variant="body2" color="text.primary">
+                      Home
+                    </Typography>
+                  </MenuItem>
+                  <MenuItem
+                    onClick={() => signOut()}
+                    sx={{ py: '6px', px: '12px' }}
+                  >
+                    <Typography variant="body2" color="text.primary">
+                      Logout
+                    </Typography>
+                  </MenuItem>
+                  <MenuItem
+                    onClick={() => navigate('/profile')}
+                    sx={{ py: '6px', px: '12px' }}
+                  >
+                    <Typography variant="body2" color="text.primary">
+                      Profile
+                    </Typography>
+                  </MenuItem>
+
+                  <MenuItem
+                    onClick={() => navigate('/search')}
+                    sx={{ py: '6px', px: '12px' }}
+                  >
+                    <Typography variant="body2" color="text.primary">
+                      Search
+                    </Typography>
+                  </MenuItem>
                     <Divider />
                     <MenuItem>
                       <Button

@@ -86,7 +86,7 @@ const useStore = create(persist(
 
       addCommentToPost: (postId, comment) => 
         set((state) => ({
-          posts: state.posts.map((post) =>
+          currentUserPosts: state.currentUserPosts.map((post) =>
             post.id === postId
               ? { ...post, comments: [...post.comments, comment] }
               : post
