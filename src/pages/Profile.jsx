@@ -44,9 +44,8 @@ const Profile = () => {
       }
     }
 
-    if (!currentUser){
-      fetchUser();
-    }
+    
+    fetchUser();
     fetchPosts();
   }, []);
 
