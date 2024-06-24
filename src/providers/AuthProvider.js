@@ -16,7 +16,9 @@ const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [session, setSession] = useState(null);
-  const { currentUser, setCurrentUser } = useStore()
+  const { currentUser, setCurrentUser, setPosts, setFeedResults, setSearchResults, setSearchTerm,
+    setProfile, setUsers, setCurrentUserPosts
+   } = useStore()
   // const navigate = useNavigate()
 
   useEffect(() => {
@@ -76,13 +78,16 @@ export const AuthProvider = ({ children }) => {
     return data;
   };
 
-  const signUp = async ({ userData }) => {
+  const signUp = async ( userData ) => {
+    console.log(userData)
     const { data, error } = await supabase.auth.signUp({
-      email: userData.email,
-      password: userData.password
+      "email": userData.email,
+      "password": userData.password
     });
 
+
     if (data.user) {
+      Cookies.set('access_token', data.session.access_token)
       userData['id'] = data.user.id
       console.log("userData: ", userData)
 
@@ -100,6 +105,14 @@ export const AuthProvider = ({ children }) => {
     const { error } = await supabase.auth.signOut();
     if (error) throw error;
     setCurrentUser(null)
+    setPosts([])
+    setFeedResults([])
+    setSearchResults({ posts: [], users: [] })
+    setSearchTerm("")
+    setUsers({})
+    setProfile({})
+    setCurrentUserPosts([])
+    Cookies.remove("access_token")
   };
 
   const value = {

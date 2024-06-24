@@ -23,15 +23,15 @@ const SignUp = () => {
   const [data, setData] = useState({});
 
   const updateData = (field, value) => {
-    console.log({field, value})
     let update = {[field]: value}
     setData(data => ({...data, ...update}))
   }
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault()
     try {
       console.log(data)
-      // const data = signUp(data)
+      const response = signUp(data)
 
     } catch (error) {
       console.log('error signing up:', error);
@@ -90,18 +90,19 @@ const SignUp = () => {
                   name="username"
                   label="Username"
                   type="text"
-                  id="phoneNumber"
+                  id="username"
                   autoComplete="tell"
-                  onChange={(e) => {updateData('phone_number',e.target.value)}}
+                  onChange={(e) => {updateData('username',e.target.value)}}
                 />
               </Grid>
               <Grid item xs={12}>
                 <DatePicker
-                  value={data.date_of_birth}
+                  // value={data.date_of_birth}
+                  format="YYYY-DD-MM"
                   onChange={(e) => {
                     console.log(e);
                     const date = `${e.$y}-${e.$M}-${e.$D}`
-                    console.log(e.$d)
+                    console.log(date)
                     updateData('date_of_birth', date)
                   }}
                 />
