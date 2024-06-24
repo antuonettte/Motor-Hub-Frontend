@@ -23,6 +23,7 @@ const Profile = () => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
+        console.log(fetching user)
         const response = await fetchUserById(currentUser.id);
         setProfile(response.data.user);
       } catch (err) {
@@ -47,6 +48,7 @@ const Profile = () => {
     
     fetchUser();
     fetchPosts();
+    console.log(profile)
   }, []);
 
   const handleLike = async (post_id, likedByUser) => {
