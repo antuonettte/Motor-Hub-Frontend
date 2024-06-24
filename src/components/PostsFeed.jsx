@@ -4,14 +4,14 @@ import { ThumbUp, Comment, ExpandMore, ExpandLess, Send } from '@mui/icons-mater
 import CarouselComponent from '../components/Carousel.jsx';
 import { Divider, Avatar, Typography, Box, Grid, Card, CardContent, IconButton, Button, Collapse, Dialog, DialogTitle, DialogContent, TextField, DialogActions } from '@mui/material';
 import useStore from '../store.js';
-import {postComment} from '../api/api.js'
+import { postComment } from '../api/api.js'
 
 const PostsFeed = ({ posts, handleLike }) => {
     const [expandedPostIds, setExpandedPostIds] = useState({});
     const [commentDialogOpen, setCommentDialogOpen] = useState(false);
     const [currentPostId, setCurrentPostId] = useState(null);
     const [comment, setComment] = useState('');
-    const {currentUser, addCommentToPost} = useStore()
+    const { currentUser, addCommentToPost } = useStore()
 
 
     const handleToggleExpand = (postId) => {
@@ -51,7 +51,7 @@ const PostsFeed = ({ posts, handleLike }) => {
     return (
         <>
             <Grid container spacing={2}>
-                {posts.map((post) => (
+                {posts.toReversed().map((post) => (
                     <Grid item xs={12} key={post.id}>
                         <Card>
                             {post.media_metadata.length > 0 && <CarouselComponent media={post.media_metadata} />}
@@ -83,12 +83,23 @@ const PostsFeed = ({ posts, handleLike }) => {
                                 {post.comments.length > 0 && (
                                     <>
                                         <Divider>
-                                            
+
                                         </Divider>
                                         <Box marginTop="10px">
-                                            <Typography variant="body2" color="textSecondary">
-                                                Most Recent Comment: {post.comments[post.comments.length - 1].content}
-                                            </Typography>
+                                            <Box display="flex" alignItems="center" marginBottom="10px">
+                                                <Box display="flex" alignItems="center" marginLeft="10px">
+                                                   
+                                                    <Typography variant="body2" style={{ marginRight: '10px' }}>
+                                                        {post.comments[post.comments.length - 1].username}
+                                                    </Typography>
+                                                </Box>
+                                                <Box display="flex" flexDirection="column" flexGrow={1}>
+                                                    <Typography variant="body2" color="textSecondary">
+                                                        {post.comments[post.comments.length - 1].content}
+                                                    </Typography>
+                                                </Box>
+
+                                            </Box>
                                         </Box>
                                     </>
                                 )}
@@ -101,19 +112,24 @@ const PostsFeed = ({ posts, handleLike }) => {
                                     </Button>
                                 </Box>
                                 <Collapse in={expandedPostIds[post.id]} timeout="auto" unmountOnExit>
-                                    {post.comments.length > 1 && (
-                                        <>
-                                            <Box marginTop="10px">
-                                                {post.comments.slice(0, post.comments.length - 1).map((comment, index) => (
-                                                    <Box key={index} marginBottom="10px">
-                                                        <Typography variant="body2" color="textSecondary">
-                                                            {comment.content}
-                                                        </Typography>
-                                                    </Box>
-                                                ))}
+                                    <Box marginTop="10px">
+                                        {post.comments.slice(0, post.comments.length - 1).map((comment, index) => (
+                                            <Box key={index} display="flex" alignItems="center" marginBottom="10px">
+                                                <Box display="flex" alignItems="center" marginLeft="10px">
+                                                    
+                                                    <Typography variant="body2" style={{ marginRight: '10px' }}>
+                                                        {comment.username}
+                                                    </Typography>
+                                                </Box>
+                                                <Box display="flex" flexDirection="column" flexGrow={1}>
+                                                    <Typography variant="body2" color="textSecondary">
+                                                        {comment.content}
+                                                    </Typography>
+                                                </Box>
+
                                             </Box>
-                                        </>
-                                    )}
+                                        ))}
+                                    </Box>
                                 </Collapse>
                             </CardContent>
                         </Card>
