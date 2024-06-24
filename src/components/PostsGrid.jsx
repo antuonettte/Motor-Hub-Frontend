@@ -124,7 +124,7 @@ const PostsGrid = ({ posts }) => {
                         <Box key={index} display="flex" alignItems="center" marginBottom="10px">
                           <Box display="flex" alignItems="center" marginLeft="10px">
                             <Avatar src={'https://placehold.co/30'} alt="Comment User Avatar" />
-                            <Typography variant="body2" style={{ marginLeft: '10px' }}>
+                            <Typography variant="body2" style={{ marginRight: '10px' }}>
                               {comment.username}
                             </Typography>
                           </Box>
