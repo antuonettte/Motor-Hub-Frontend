@@ -17,7 +17,7 @@ const useStore = create(persist(
     searchResults: { posts: [], users: [] },
     timestamp: null,
 
-    setCurrentUser: (currentUser) => set({ currentUser, timestamp: Date.now(), test:"awd" }),
+    setCurrentUser: (currentUser) => set({ currentUser, timestamp: Date.now()}),
     setPosts: (posts) => set({ posts, timestamp: Date.now() }),
     setFeedResults: (feedResults) => set({ feedResults, timestamp: Date.now() }),
     setSearchResults: (searchResults) => set({ searchResults, timestamp: Date.now() }),
@@ -70,19 +70,38 @@ const useStore = create(persist(
         timestamp: Date.now(),
       })),
 
-    updateMediaUrl: (postIndex, mediaIndex, newUrl, expiresAt) =>
-      set((state) => {
-        if (
-          postIndex >= 0 &&
-          postIndex < state.feedResults.length &&
-          mediaIndex >= 0 &&
-          mediaIndex < state.feedResults[postIndex].media_metadata.length
-        ) {
-          state.feedResults[postIndex].media_metadata[mediaIndex].url = newUrl;
-          state.feedResults[postIndex].media_metadata[mediaIndex].expiresAt = expiresAt;
+      updateMediaUrl: (postId, mediaIndex, newUrl, expiresAt) =>
+        set((state) => {
+          // Update feedResults
+          state.feedResults = state.feedResults.map((post) => {
+            if (post.id === postId) {
+              if (
+                mediaIndex >= 0 &&
+                mediaIndex < post.media_metadata.length
+              ) {
+                post.media_metadata[mediaIndex].url = newUrl;
+                post.media_metadata[mediaIndex].expiresAt = expiresAt;
+              }
+            }
+            return post;
+          });
+  
+          // Update currentUserPosts
+          state.currentUserPosts = state.currentUserPosts.map((post) => {
+            if (post.id === postId) {
+              if (
+                mediaIndex >= 0 &&
+                mediaIndex < post.media_metadata.length
+              ) {
+                post.media_metadata[mediaIndex].url = newUrl;
+                post.media_metadata[mediaIndex].expiresAt = expiresAt;
+              }
+            }
+            return post;
+          });
+  
           state.timestamp = Date.now();
-        }
-      }),
+        }),
 
       addCommentToPost: (postId, comment) =>
         set((state) => {

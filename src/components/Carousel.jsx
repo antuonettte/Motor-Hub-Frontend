@@ -11,12 +11,12 @@ const CarouselComponent = ({ media, postIndex, postId }) => {
     async function checkAndUpdateS3UrlIfNeeded(s3_key, postIndex, mediaIndex, post_id, url, expiresAt) {
         const currentTimestamp = Math.floor(Date.now() / 1000); // Get current timestamp in seconds
         console.log("Checking media url, Current Time: ", currentTimestamp, " expiresAt: ", expiresAt)
-        // Check if the URL has expired
+        // // Check if the URL has expired
         if (currentTimestamp >= expiresAt) {
             // URL has expired, call function to update the URL
             console.log("Refreshing Download URL")
             const response = await updateUrl(s3_key, post_id);
-            updateMediaUrl(postIndex, mediaIndex, response.data.url, response.data.expiresAt)
+        //     updateMediaUrl(postIndex, mediaIndex, response.data.url, response.data.expiresAt)
             return response.data.url
         } else {
             return url
@@ -32,7 +32,7 @@ const CarouselComponent = ({ media, postIndex, postId }) => {
         <Carousel indicators={true} navButtonsAlwaysVisible={true} autoPlay={false}>
             {media.map((item, index) => {
                 // Check if the media item has expired
-
+                console.log(postId);
                 checkAndUpdateS3UrlIfNeeded(item.s3_key, postIndex, index, postId, item.url, item.expiresAt)
 
 

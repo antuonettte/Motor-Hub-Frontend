@@ -15,9 +15,7 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const { currentUser, setCurrentUser, clearData
-   } = useStore()
-  // const navigate = useNavigate()
+  const { currentUser, setCurrentUser, clearData} = useStore()
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -26,19 +24,15 @@ export const AuthProvider = ({ children }) => {
 
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      console.log("Auth Change: ", _event)
-      if (_event == 'SIGNED_OUT') {
-
-      } else if (session) {
-
-      } else if (_event == 'TOKEN_REFRESHED') {
+    } = supabase.auth.onAuthStateChange((event, session) => {
+      console.log("Auth Change: ", event)
+      if (event === 'TOKEN_REFRESHED') {
         Cookies.set('access_token', session.access_token)
         console.log("Token Refresh session", session)
 
-      } else if (_event == 'SIGNED_IN') {
+      } else if (event == 'SIGNED_IN') {
         console.log('Sign In Session', session)
-
+        
         // setCurrentUser(session?.user || null)
         Cookies.set('access_token', session.access_token)
         console.log(session.access_token)

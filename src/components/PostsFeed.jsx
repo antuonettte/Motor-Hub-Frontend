@@ -61,7 +61,7 @@ const PostsFeed = ({ posts, handleLike }) => {
                 {posts.toReversed().map((post) => (
                     <Grid item xs={12} key={post.id}>
                         <Card>
-                            {post.media_metadata.length > 0 && <CarouselComponent media={post.media_metadata} />}
+                            {post.media_metadata.length > 0 && <CarouselComponent postId={post.id} media={post.media_metadata} />}
                             <CardContent>
                                 <Box display="flex" alignItems="center" marginBottom="10px">
                                     <Avatar src={'https://placehold.co/60'} alt="User Avatar" />

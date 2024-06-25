@@ -42,7 +42,7 @@ const Home = () => {
                             <Card>
                                 {
                                     post.media_metadata.length > 0 &&
-                                    <CarouselComponent postID={post.id} postIndex={index} media={post.media_metadata} />
+                                    <CarouselComponent postId={post.id} postIndex={index} media={post.media_metadata} />
                                 }
                                 <CardContent>
                                     <Box display="flex" alignItems="center" marginBottom="10px">
