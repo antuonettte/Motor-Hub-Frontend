@@ -17,7 +17,7 @@ const useStore = create(persist(
     searchResults: { posts: [], users: [] },
     timestamp: null,
 
-    setCurrentUser: (currentUser) => set({ currentUser, timestamp: Date.now() }),
+    setCurrentUser: (currentUser) => set({ currentUser, timestamp: Date.now(), test:"awd" }),
     setPosts: (posts) => set({ posts, timestamp: Date.now() }),
     setFeedResults: (feedResults) => set({ feedResults, timestamp: Date.now() }),
     setSearchResults: (searchResults) => set({ searchResults, timestamp: Date.now() }),
@@ -84,20 +84,39 @@ const useStore = create(persist(
         }
       }),
 
-      addCommentToPost: (postId, comment) => 
-        set((state) => ({
-          currentUserPosts: state.currentUserPosts.map((post) =>
+      addCommentToPost: (postId, comment) =>
+        set((state) => {
+          // Update currentUserPosts
+          const updatedCurrentUserPosts = state.currentUserPosts.map((post) =>
             post.id === postId
               ? { ...post, comments: [...post.comments, comment] }
               : post
-          ),
-          feedResults: state.feedResults.map((post) =>
+          );
+      
+          // Update feedResults
+          const updatedFeedResults = state.feedResults.map((post) =>
             post.id === postId
               ? { ...post, comments: [...post.comments, comment] }
               : post
-          ),
-          timestamp: Date.now(),
-        })),
+          );
+      
+          // Update searchResults
+          const updatedSearchResults = {
+            ...state.searchResults,
+            posts: state.searchResults.posts.map((post) =>
+              post.id === postId
+                ? { ...post, comments: [...post.comments, comment] }
+                : post
+            )
+          };
+      
+          return {
+            currentUserPosts: updatedCurrentUserPosts,
+            feedResults: updatedFeedResults,
+            searchResults: updatedSearchResults,
+            timestamp: Date.now(),
+          };
+        }),
 
     clearData: () => set({
       currentUser: null,
@@ -128,28 +147,28 @@ const useStore = create(persist(
       }
     },
 
-    
+
 
   }), {
-    name: 'app-storage',
-    getStorage: () => localStorage,
-    onRehydrateStorage: () => (state) => {
-      if (state) {
-        const { timestamp } = state;
-        if (timestamp && (Date.now() - timestamp > EXPIRATION_TIME)) {
-          state.currentUser = null;
-          state.posts = [];
-          state.profile = {};
-          state.currentUserPosts = [];
-          state.feedResults = [];
-          state.searchTerm = '';
-          state.users = {};
-          state.searchResults = { posts: [], users: [] };
-          state.timestamp = null;
-        }
+  name: 'app-storage',
+  getStorage: () => localStorage,
+  onRehydrateStorage: () => (state) => {
+    if (state) {
+      const { timestamp } = state;
+      if (timestamp && (Date.now() - timestamp > EXPIRATION_TIME)) {
+        state.currentUser = null;
+        state.posts = [];
+        state.profile = {};
+        state.currentUserPosts = [];
+        state.feedResults = [];
+        state.searchTerm = '';
+        state.users = {};
+        state.searchResults = { posts: [], users: [] };
+        state.timestamp = null;
       }
     }
   }
+}
 ));
 
 export default useStore;

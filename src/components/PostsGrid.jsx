@@ -1,14 +1,24 @@
 import React, { useState } from 'react';
 import {
   Box, Grid, Card, CardMedia, Dialog, DialogContent, Typography,
-  Avatar, IconButton, Divider, Button, Collapse, CardContent, CardActions
+  Avatar, IconButton, Divider, Button, Collapse, CardContent, CardActions,
+  DialogTitle,
+  DialogActions,
+  TextField
 } from '@mui/material';
 import { ThumbUp, Comment, ExpandMore, ExpandLess, Send } from '@mui/icons-material';
+import useStore from '../store';
+import { postComment } from '../api/api.js'
 
 const PostsGrid = ({ posts }) => {
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedPost, setSelectedPost] = useState(null);
   const [expandedPostIds, setExpandedPostIds] = useState({});
+  const [commentDialogOpen, setCommentDialogOpen] = useState(false);
+  const [currentPostId, setCurrentPostId] = useState(null);
+  const [comment, setComment] = useState('');
+  const { currentUser, addCommentToPost } = useStore()
+  
 
   const handleOpenModal = (post) => {
     setSelectedPost(post);
@@ -32,7 +42,37 @@ const PostsGrid = ({ posts }) => {
   };
 
   const handleOpenCommentDialog = (postId) => {
-    // Implement open comment dialog functionality
+    setCurrentPostId(postId);
+    setCommentDialogOpen(true);
+  };
+
+  const handleCloseCommentDialog = () => {
+    setCommentDialogOpen(false);
+    setCurrentPostId(null);
+    setComment('');
+  };
+
+  const handleCommentChange = (e) => {
+    setComment(e.target.value);
+  };
+
+  const handlePostComment = () => {
+    // Implement post comment functionality
+    try{
+      console.log("Posting Comment");
+      postComment(currentPostId, currentUser.id, currentUser.username, comment)
+      addCommentToPost(currentPostId, {
+          "post_id": currentPostId,
+          "user_id": currentUser.id,
+          "username": currentUser.username,
+          "content": comment,
+          "createdAt": Date.now()
+      })
+  }catch(e){
+      alert(e.message)
+      console.log("error")
+  }
+  handleCloseCommentDialog();
   };
 
   return (
@@ -55,98 +95,122 @@ const PostsGrid = ({ posts }) => {
       </Box>
 
       {selectedPost && (
-        <Dialog open={modalOpen} onClose={handleCloseModal} fullWidth>
-          <DialogContent>
-            <CardMedia
-              component="img"
-              height="300"
-              image={selectedPost.media_metadata.length > 0 ? selectedPost.media_metadata[0]['url'] : "https://via.placeholder.com/400x200"}
-              alt="Post media"
-            />
-            <CardContent>
-              <Box display="flex" alignItems="center" marginBottom="10px">
-                <Avatar src={'https://placehold.co/60'} alt="User Avatar" />
-                <Typography variant="h6" style={{ marginLeft: '10px' }}>
-                  {selectedPost.username}
+        <>
+          <Dialog open={modalOpen} onClose={handleCloseModal} fullWidth>
+            <DialogContent>
+              <CardMedia
+                component="img"
+                height="300"
+                image={selectedPost.media_metadata.length > 0 ? selectedPost.media_metadata[0]['url'] : "https://via.placeholder.com/400x200"}
+                alt="Post media"
+              />
+              <CardContent>
+                <Box display="flex" alignItems="center" marginBottom="10px">
+                  <Avatar src={'https://placehold.co/60'} alt="User Avatar" />
+                  <Typography variant="h6" style={{ marginLeft: '10px' }}>
+                    {selectedPost.username}
+                  </Typography>
+                </Box>
+                <Typography variant="h5">{selectedPost.title}</Typography>
+                <Typography variant="body2" color="textSecondary" style={{ marginTop: '10px' }}>
+                  {selectedPost.content}
                 </Typography>
-              </Box>
-              <Typography variant="h5">{selectedPost.title}</Typography>
-              <Typography variant="body2" color="textSecondary" style={{ marginTop: '10px' }}>
-                {selectedPost.content}
-              </Typography>
-              <Box display="flex" alignItems="center" justifyContent="space-between" marginTop="10px">
-                <Box display="flex" alignItems="center">
-                  <IconButton onClick={() => handleLike(selectedPost.id, selectedPost.likedByUser)}>
-                    <ThumbUp color={selectedPost.likedByUser ? "primary" : ""} />
-                  </IconButton>
-                  <Typography variant="body2">{selectedPost.like_count} likes</Typography>
-                </Box>
-                <Box display="flex" alignItems="center">
-                  <IconButton onClick={() => handleOpenCommentDialog(selectedPost.id)}>
-                    <Comment />
-                  </IconButton>
-                  <Typography variant="body2">{selectedPost.comments.length} comments</Typography>
-                </Box>
-              </Box>
-              {selectedPost.comments.length > 0 && (
-                <>
-                  <Divider />
-
-                 
-                  <Box display="flex" alignItems="center" marginBottom="10px">
-                    <Box display="flex" alignItems="center" marginLeft="10px">
-                      <Avatar src={'https://placehold.co/30'} alt="Comment User Avatar" />
-                      <Typography variant="body2" style={{ marginLeft: '10px' }}>
-                        {selectedPost.comments[selectedPost.comments.length - 1].username}
-                      </Typography>
-                    </Box>
-                    <Box display="flex" flexDirection="column" flexGrow={1}>
-                      <Typography variant="body2" color="textSecondary">
-                        {selectedPost.comments[selectedPost.comments.length - 1].content}
-                      </Typography>
-                    </Box>
+                <Box display="flex" alignItems="center" justifyContent="space-between" marginTop="10px">
+                  <Box display="flex" alignItems="center">
+                    <IconButton onClick={() => handleLike(selectedPost.id, selectedPost.likedByUser)}>
+                      <ThumbUp color={selectedPost.likedByUser ? "primary" : ""} />
+                    </IconButton>
+                    <Typography variant="body2">{selectedPost.like_count} likes</Typography>
                   </Box>
-                </>
-              )}
-              <Box display="flex" justifyContent="flex-end">
-                <Button
-                  onClick={() => handleToggleExpand(selectedPost.id)}
-                  endIcon={expandedPostIds[selectedPost.id] ? <ExpandLess /> : <ExpandMore />}
-                >
-                  {/* {expandedPostIds[selectedPost.id] ? 'Hide Comments' : 'Show All Comments'} */}
-                </Button>
-              </Box>
-              <Collapse in={expandedPostIds[selectedPost.id]} timeout="auto" unmountOnExit>
-                {selectedPost.comments.length > 1 && (
+                  <Box display="flex" alignItems="center">
+                    <IconButton onClick={() => handleOpenCommentDialog(selectedPost.id)}>
+                      <Comment />
+                    </IconButton>
+                    <Typography variant="body2">{selectedPost.comments.length} comments</Typography>
+                  </Box>
+                </Box>
+                {selectedPost.comments.length > 0 && (
                   <>
-                    <Box marginTop="10px">
-                      {selectedPost.comments.slice(0, selectedPost.comments.length - 1).map((comment, index) => (
-                        <Box key={index} display="flex" alignItems="center" marginBottom="10px">
-                          <Box display="flex" alignItems="center" marginLeft="10px">
-                            <Avatar src={'https://placehold.co/30'} alt="Comment User Avatar" />
-                            <Typography variant="body2" style={{ marginRight: '10px' }}>
-                              {comment.username}
-                            </Typography>
-                          </Box>
-                          <Box display="flex" flexDirection="column" flexGrow={1}>
-                            <Typography variant="body2" color="textSecondary">
-                              {comment.content}
-                            </Typography>
-                          </Box>
-                        </Box>
-                      ))}
+                    <Divider />
+
+
+                    <Box display="flex" alignItems="center" marginBottom="10px">
+                      <Box display="flex" alignItems="center" marginLeft="10px">
+                        <Avatar src={'https://placehold.co/30'} alt="Comment User Avatar" />
+                        <Typography variant="body2" style={{ marginRight: '10px', marginLeft: '10px' }}>
+                          {selectedPost.comments[selectedPost.comments.length - 1].username}
+                        </Typography>
+                      </Box>
+                      <Box display="flex" flexDirection="column" flexGrow={1}>
+                        <Typography variant="body2" color="textSecondary">
+                          {selectedPost.comments[selectedPost.comments.length - 1].content}
+                        </Typography>
+                      </Box>
                     </Box>
                   </>
                 )}
-              </Collapse>
-            </CardContent>
-            <CardActions>
-              <Button onClick={handleCloseModal} color="primary">
-                Close
+                <Box display="flex" justifyContent="flex-end">
+                  <Button
+                    onClick={() => handleToggleExpand(selectedPost.id)}
+                    endIcon={expandedPostIds[selectedPost.id] ? <ExpandLess /> : <ExpandMore />}
+                  >
+                    {/* {expandedPostIds[selectedPost.id] ? 'Hide Comments' : 'Show All Comments'} */}
+                  </Button>
+                </Box>
+                <Collapse in={expandedPostIds[selectedPost.id]} timeout="auto" unmountOnExit>
+                  {selectedPost.comments.length > 1 && (
+                    <>
+                      <Box marginTop="10px">
+                        {selectedPost.comments.slice(0, selectedPost.comments.length - 1).map((comment, index) => (
+                          <Box key={index} display="flex" alignItems="center" marginBottom="10px">
+                            <Box display="flex" alignItems="center" marginLeft="10px">
+                              <Avatar src={'https://placehold.co/30'} alt="Comment User Avatar" />
+                              <Typography variant="body2" style={{ marginRight: '10px', marginLeft: '10px' }}>
+                                {comment.username}
+                              </Typography>
+                            </Box>
+                            <Box display="flex" flexDirection="column" flexGrow={1}>
+                              <Typography variant="body2" color="textSecondary">
+                                {comment.content}
+                              </Typography>
+                            </Box>
+                          </Box>
+                        ))}
+                      </Box>
+                    </>
+                  )}
+                </Collapse>
+              </CardContent>
+              <CardActions>
+                <Button onClick={handleCloseModal} color="primary">
+                  Close
+                </Button>
+              </CardActions>
+            </DialogContent>
+          </Dialog>
+          <Dialog open={commentDialogOpen} onClose={handleCloseCommentDialog} fullWidth>
+            <DialogTitle>Post a Comment</DialogTitle>
+            <DialogContent>
+              <TextField
+                autoFocus
+                margin="dense"
+                label="Comment"
+                type="text"
+                fullWidth
+                value={comment}
+                onChange={handleCommentChange}
+              />
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleCloseCommentDialog} color="secondary">
+                Cancel
               </Button>
-            </CardActions>
-          </DialogContent>
-        </Dialog>
+              <Button onClick={handlePostComment} color="primary" startIcon={<Send />}>
+                Post
+              </Button>
+            </DialogActions>
+          </Dialog>
+        </>
       )}
     </>
   );

@@ -15,15 +15,12 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [session, setSession] = useState(null);
-  const { currentUser, setCurrentUser, setPosts, setFeedResults, setSearchResults, setSearchTerm,
-    setProfile, setUsers, setCurrentUserPosts
+  const { currentUser, setCurrentUser, clearData
    } = useStore()
   // const navigate = useNavigate()
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session)
 
     })
 
@@ -32,9 +29,9 @@ export const AuthProvider = ({ children }) => {
     } = supabase.auth.onAuthStateChange((_event, session) => {
       console.log("Auth Change: ", _event)
       if (_event == 'SIGNED_OUT') {
-        setSession(null)
+
       } else if (session) {
-        setSession(session)
+
       } else if (_event == 'TOKEN_REFRESHED') {
         Cookies.set('access_token', session.access_token)
         console.log("Token Refresh session", session)
@@ -93,7 +90,6 @@ export const AuthProvider = ({ children }) => {
 
       const response = await createUser(userData)
       console.log(response)
-
       setCurrentUser(userData)
     }
 
@@ -104,19 +100,11 @@ export const AuthProvider = ({ children }) => {
   const signOut = async () => {
     const { error } = await supabase.auth.signOut();
     if (error) throw error;
-    setCurrentUser(null)
-    setPosts([])
-    setFeedResults([])
-    setSearchResults({ posts: [], users: [] })
-    setSearchTerm("")
-    setUsers({})
-    setProfile({})
-    setCurrentUserPosts([])
+    clearData()
     Cookies.remove("access_token")
   };
 
   const value = {
-    session,
     supabase,
     signIn,
     signOut,

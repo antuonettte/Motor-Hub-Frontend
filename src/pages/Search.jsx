@@ -6,17 +6,11 @@ import UserCard from '../components/UserCard.jsx';
 import useStore from '../store.js'
 
 const SearchPage = () => {
-    // const [searchTerm, setSearchTerm] = useState('');
     const [activeTab, setActiveTab] = useState(0);
-    // const [results, setResults] = useState({
-    //     posts: [],
-    //     users: []
-    // });
-
-    const {searchResults, setSearchResults, searchTerm, setSearchTerm} = useStore()
-
+    const { setSearchResults, searchTerm, setSearchTerm} = useStore()
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState(null)
+    const searchResults = useStore( (state) => state.searchResults )
 
 
     useEffect(() => {

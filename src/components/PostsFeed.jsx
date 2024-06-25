@@ -38,14 +38,21 @@ const PostsFeed = ({ posts, handleLike }) => {
 
     const handlePostComment = () => {
         // Implement post comment functionality
-        postComment(currentPostId, currentUser.id, comment)
-        addCommentToPost(currentPostId, {
-            "post_id": currentPostId,
-            "user_id": currentPostId.id,
-            "content": comment,
-            "createdAt": Date.now()
-        })
+        try{
+            postComment(currentPostId, currentUser.id, currentUser.username, comment)
+            addCommentToPost(currentPostId, {
+                "post_id": currentPostId,
+                "user_id": currentUser.id,
+                "username": currentUser.username,
+                "content": comment,
+                "createdAt": Date.now()
+            })
+        }catch(e){
+            alert(e.message)
+            console.log("error")
+        }
         handleCloseCommentDialog();
+        
     };
 
     return (
