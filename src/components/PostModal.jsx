@@ -5,6 +5,7 @@ import {
 import { Add, AddBox, AddPhotoAlternate, Cancel, Send } from '@mui/icons-material';
 import { useDropzone } from 'react-dropzone';
 import useStore from '../store';
+import { createPost } from '../api/api.js'
 
 const CreatePostModal = ({ children }) => {
   const [modalOpen, setModalOpen] = useState(false);
@@ -12,7 +13,7 @@ const CreatePostModal = ({ children }) => {
   const [hashtags, setHashtags] = useState([]);
   const [hashtagInput, setHashtagInput] = useState('');
   const [images, setImages] = useState([]);
-  const { addPost } = useStore();
+  const { addPost, currentUser } = useStore();
 
   const handleOpenModal = () => {
     setModalOpen(true);
@@ -54,8 +55,12 @@ const CreatePostModal = ({ children }) => {
   const { getRootProps, getInputProps } = useDropzone({ onDrop });
 
   const handleCreatePost = () => {
-    // Implement the function to add a post
-    addPost({ content, hashtags, images });
+    const postNames = images.map((image) => image.name.replace(/\..+$/, '') )
+    console.log(postNames)
+    // addPost({ content, hashtags, postNames });
+    const response = createPost(currentUser.id, currentUser.username, content, postNames)
+    console.log(response)
+    
     handleCloseModal();
   };
 

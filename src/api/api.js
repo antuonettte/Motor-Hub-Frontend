@@ -46,5 +46,11 @@ export const postComment = (post_id, user_id, username, content) => apiClient.po
     "username": username
 
   });
+export const createPost = (user_id, username, post_text, media) => apiClient.post("/post-management/post", {
+  "user_id": user_id,
+  "username":username,
+  "post_text":post_text,
+  "media_files": media
+})
 
 export default apiClient;
