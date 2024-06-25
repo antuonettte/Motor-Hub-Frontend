@@ -15,6 +15,9 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from '../providers/AuthProvider';
 import SettingsIcon from '@mui/icons-material/Settings';
 import useStore from '../store';
+import CreatePostModal from './PostModal';
+import { IconButton } from '@mui/material';
+import { Add } from '@mui/icons-material';
 
 const logoStyle = {
   width: '140px',
@@ -131,6 +134,9 @@ const Navbar = ({ mode, toggleColorMode }) => {
                           Search
                         </Typography>
                       </MenuItem>
+                      
+                      <CreatePostModal />
+
                     </> :
                     <></>
                 }
