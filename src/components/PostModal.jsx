@@ -57,8 +57,9 @@ const CreatePostModal = ({ children }) => {
   const handleCreatePost = () => {
     const postNames = images.map((image) => image.name.replace(/\..+$/, '') )
     console.log(postNames)
+    console.log(images[0].type)
     // addPost({ content, hashtags, postNames });
-    const response = createPost(currentUser.id, currentUser.username, content, postNames)
+    // const response = createPost(currentUser.id, currentUser.username, content, postNames)
     console.log(response)
     
     handleCloseModal();
