@@ -29,10 +29,6 @@ const Home = () => {
         fetchFeed()
     }, []);
 
-    
-
-
-    console.log(feedResults)
     return (
         <div>
             <Container maxWidth="md" style={{ marginTop: '150px' }}>

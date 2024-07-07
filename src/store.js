@@ -30,6 +30,10 @@ const useStore = create(persist(
     setProfile: (profile) => set({ profile, timestamp: Date.now() }),
     setCurrentUserPosts: (currentUserPosts) => set({ currentUserPosts, timestamp: Date.now() }),
 
+    addCurrentUserPosts: (post) => set((state) => ({
+
+    })),
+
     updateUserPosts: (userId, posts) =>
       set((state) => ({
         users: {

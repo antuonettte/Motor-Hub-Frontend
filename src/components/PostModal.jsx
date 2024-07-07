@@ -5,7 +5,7 @@ import {
 import { Add, AddBox, AddPhotoAlternate, Cancel, Send } from '@mui/icons-material';
 import { useDropzone } from 'react-dropzone';
 import useStore from '../store';
-import { createPost } from '../api/api.js'
+import { createPost, processMediaUpload, uploadFilesToUrls } from '../api/api.js'
 
 const CreatePostModal = ({ children }) => {
   const [modalOpen, setModalOpen] = useState(false);
@@ -54,14 +54,23 @@ const CreatePostModal = ({ children }) => {
 
   const { getRootProps, getInputProps } = useDropzone({ onDrop });
 
-  const handleCreatePost = () => {
-    const postNames = images.map((image) => image.name.replace(/\..+$/, '') )
-    console.log(postNames)
-    console.log(images[0].type)
+  const handleCreatePost = async () => {
+    const media = images.map((image) => {
+      const media_dict = {
+        "media_filename":image.name.replace(/\..+$/, ''),
+        "content_type":image.type
+      }
+      return media_dict
+    } )
+
     // addPost({ content, hashtags, postNames });
-    // const response = createPost(currentUser.id, currentUser.username, content, postNames)
+    const response = await createPost(currentUser.id, currentUser.username, content, media)
     console.log(response)
-    
+    const uploadResponse = await uploadFilesToUrls(response.data, images);
+    const processResponse = await processMediaUpload(response.data, currentUser.id)
+
+    //TODO create post object and add to current user posts
+
     handleCloseModal();
   };
 
