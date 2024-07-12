@@ -134,7 +134,7 @@ const Navbar = ({ mode, toggleColorMode }) => {
                           Search
                         </Typography>
                       </MenuItem>
-                      
+
                       <CreatePostModal />
 
                     </> :
@@ -246,6 +246,15 @@ const Navbar = ({ mode, toggleColorMode }) => {
                       Profile
                     </Typography>
                   </MenuItem>
+                  <MenuItem
+                    onClick={() => navigate('/search')}
+                    sx={{ py: '6px', px: '12px' }}
+                  >
+                    <Typography variant="body2" color="text.primary">
+                      Search
+                    </Typography>
+                  </MenuItem>
+                  <CreatePostModal />
 
                   <MenuItem
                     onClick={() => navigate('/search')}
